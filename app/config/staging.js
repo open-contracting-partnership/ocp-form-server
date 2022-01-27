@@ -1,3 +1,3 @@
 module.exports = {
-  environment: 'staging'
+    environment: 'staging'
 };
