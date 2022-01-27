@@ -4,7 +4,7 @@
 	"description": "OCP Form Server",
 	"main": "app/index.js",
 	"engines": {
-		"node": "12.x"
+		"node": "4.x"
 	},
 	"repository": {
 		"type": "git",
