@@ -1,6 +1,6 @@
 {
   "name": "ocp-form-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "OCP Form Server",
   "main": "app/index.js",
   "engines": {
