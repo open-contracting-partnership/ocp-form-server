@@ -14,7 +14,7 @@ module.exports.connection = github;
 module.exports.getMasterSHA = function () {
     return new Promise((fulfill, reject) => {
         github.gitdata.getReference({
-            user: config.ghUser,
+            owner: config.ghUser,
             repo: config.ghRepo,
             ref: 'heads/master'
         }, function (err, data) {
@@ -29,7 +29,7 @@ module.exports.getMasterSHA = function () {
 module.exports.getContent = function (path, ref) {
     return new Promise((fulfill, reject) => {
         github.repos.getContent({
-            user: config.ghUser,
+            owner: config.ghUser,
             repo: config.ghRepo,
             path: path,
             ref: ref || 'master'
@@ -45,7 +45,7 @@ module.exports.getContent = function (path, ref) {
 module.exports.createBranch = function (name, originSHA) {
     return new Promise((fulfill, reject) => {
         github.gitdata.createReference({
-            user: config.ghUser,
+            owner: config.ghUser,
             repo: config.ghRepo,
             ref: `refs/heads/${name}`,
             sha: originSHA
@@ -61,7 +61,7 @@ module.exports.createBranch = function (name, originSHA) {
 module.exports.updateFile = function (path, content, fileSHA, branch, commitMessage, authorName, authorEmail) {
     return new Promise((fulfill, reject) => {
         github.repos.updateFile({
-            user: config.ghUser,
+            owner: config.ghUser,
             repo: config.ghRepo,
             path: path,
             content: (new Buffer(content).toString('base64')),
@@ -84,7 +84,7 @@ module.exports.updateFile = function (path, content, fileSHA, branch, commitMess
 module.exports.createPR = function (title, head, base) {
     return new Promise((fulfill, reject) => {
         github.pullRequests.create({
-            user: config.ghUser,
+            owner: config.ghUser,
             repo: config.ghRepo,
             title: title,
             head: head,
