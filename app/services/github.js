@@ -5,7 +5,7 @@ var config = require('../config');
 var github = new GitHubApi({
     version: '3.0.0',
     headers: {
-        Authorization: config.ghToken
+        Authorization: `Bearer ${config.ghToken}`,
     }
 });
 
