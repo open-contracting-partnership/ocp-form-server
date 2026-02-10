@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "boom": "^3.1.1",
-    "eslint": "^1.0.0",
+    "eslint": "^10.0.0",
     "eslint-config-semistandard": "^5.0.0",
     "eslint-config-standard": "^4.0.0",
     "eslint-plugin-promise": "^1.0.8",
