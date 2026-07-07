@@ -1,12 +1,12 @@
 'use strict';
-var Hapi = require('hapi');
+var Hapi = require('@hapi/hapi');
 var config = require('./config');
 
-var server = new Hapi.Server({
-    connections: {
-        routes: {
-            cors: true
-        }
+var server = Hapi.server({
+    host: config.connection.host,
+    port: config.connection.port,
+    routes: {
+        cors: true
     },
     debug: config.debug ? {
         log: ['error'],
@@ -14,13 +14,14 @@ var server = new Hapi.Server({
     } : false
 });
 
-server.connection(config.connection);
+process.on('unhandledRejection', (err) => {
+    console.error(err);
+    process.exit(1);
+});
 
 // Bootstrap Hapi Server Plugins, passes the server object to the plugins.
-require('./services/plugins')(server, function (err) {
-    if (err) {
-        throw err;
-    }
+var init = async function () {
+    await require('./services/plugins')(server);
 
     // Add the server routes.
     server.route(require('./services/routes'));
@@ -32,11 +33,12 @@ require('./services/plugins')(server, function (err) {
     // With Hapi, we don’t need to have the server listening to test it.
     if (!module.parent) {
         // Start the server.
-        server.start(() => {
-            // Log to the console the host and port info.
-            console.log('Server started at: ' + server.info.uri);
-        });
+        await server.start();
+        // Log to the console the host and port info.
+        console.log('Server started at: ' + server.info.uri);
     }
-});
+};
+
+init();
 
 module.exports = server;

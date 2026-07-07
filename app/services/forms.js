@@ -6,7 +6,7 @@ module.exports.getEntriesIndex = function (formId) {
         github.getContent(`data/${formId}/_index.json`)
             .then(fulfill)
             .catch(err => {
-                if (err.code !== 404) {
+                if (err.status !== 404) {
                     return reject(err);
                 }
                 return fulfill(null);
