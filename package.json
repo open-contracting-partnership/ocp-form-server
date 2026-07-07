@@ -20,13 +20,6 @@
     "url": "https://github.com/open-contracting-partnership/ocp-form-server/ issues"
   },
   "homepage": "https://github.com/open-contracting-partnership/ocp-form-server",
-  "scripts": {
-    "test": "echo \"No tests\" && exit 0",
-    "start-dev": "OC_ENV=development ./node_modules/nodemon/bin/nodemon.js app/index.js",
-    "start": "OC_ENV=production node app/index.js",
-    "lint": "biome ci --indent-style=space --line-width=119",
-    "postinstall": "[ -f app/config/local.js ] || echo 'module.exports = {};' > app/config/local.js"
-  },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^21.3.12",

@@ -4,47 +4,50 @@ This project handles Github authentication and creates Pull Requests for [OCP fo
 This project is a fork of a [Blue Pencil server](https://github.com/developmentseed/blue-pencil-server).
 
 ### Requirements
-These dependencies are needed to build the app.
-
-- Node (v4.2.x) & Npm ([nvm](https://github.com/creationix/nvm) usage is advised)
-
-> The versions mentioned are the ones used during development. It could work with newer ones.
-  Run `nvm use` to activate the correct version.
+- [Node.js](https://nodejs.org/) (see the `engines` field in `package.json` for the supported version)
+- [pnpm](https://pnpm.io/)
 
 ### Setup
 Install dependencies:
 ```
-$ npm install
+pnpm install
 ```
 
 **GitHub token**
-For the app to work a GitHub token is needed.
-Add it to the local config file:
+The app needs a GitHub token. Either set the `GH_TOKEN` environment variable, or create `app/config/local.js`:
+```js
+module.exports = {
+    ghToken: "<token>",
+};
 ```
-{
-  ghToken: '<token>'
-}
-```
-or use the `GH_TOKEN` env variable.
 
 **GitHub repo**
-The repo being used for data storage is defined in the config file:
-```
-{
-  ghUser: '<user>',
-  ghRepo: '<repo>'
-}
+The repo used for data storage is set in `app/config/production.js`, and can be overridden in `app/config/local.js`:
+```js
+module.exports = {
+    ghUser: "<user>",
+    ghRepo: "<repo>",
+};
 ```
 
-### Running the App
+### Running the app
+Development (restarts on file changes via [nodemon](https://nodemon.io/), serving at `http://localhost:3000`):
 ```
-npm run start-dev
+OC_ENV=development pnpm exec nodemon app/index.js
 ```
-This will start the app at `http://localhost:3000`.
-This command starts the server with `nodemon` which watches files and restarts when there's a change. 
 
+Production:
 ```
-npm run start
+OC_ENV=production node app/index.js
 ```
-This command runs the app in `production` mode.
+
+### Linting
+Check formatting and lint (as CI does):
+```
+pnpm exec biome ci --indent-style=space --line-width=119
+```
+Apply fixes:
+```
+pnpm exec biome check --write
+```
 
