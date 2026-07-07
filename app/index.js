@@ -1,6 +1,5 @@
-'use strict';
-var Hapi = require('@hapi/hapi');
-var config = require('./config');
+var Hapi = require("@hapi/hapi");
+var config = require("./config");
 
 var server = Hapi.server({
     host: config.connection.host,
@@ -10,23 +9,23 @@ var server = Hapi.server({
     },
     debug: config.debug
         ? {
-              log: ['error'],
-              request: ['error', 'received', 'response'],
+              log: ["error"],
+              request: ["error", "received", "response"],
           }
         : false,
 });
 
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
     console.error(err);
     process.exit(1);
 });
 
 // Bootstrap Hapi Server Plugins, passes the server object to the plugins.
 var init = async () => {
-    await require('./services/plugins')(server);
+    await require("./services/plugins")(server);
 
     // Add the server routes.
-    server.route(require('./services/routes'));
+    server.route(require("./services/routes"));
 
     // https://medium.com/the-spumko-suite/testing-hapi-services-with-lab-96ac463c490a
     // The if (!module.parent) {…} conditional makes sure that if the script is

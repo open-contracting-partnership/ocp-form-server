@@ -1,5 +1,4 @@
-'use strict';
-var github = require('./github');
+var github = require("./github");
 
 module.exports.getEntriesIndex = (formId) =>
     new Promise((fulfill, reject) => {

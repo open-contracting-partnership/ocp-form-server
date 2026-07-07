@@ -1,16 +1,16 @@
-var _ = require('lodash');
+var _ = require("lodash");
 
 // Prod settings act as base.
-var config = require('./config/production');
+var config = require("./config/production");
 
 // Staging overrides
-if (process.env.OC_ENV === 'staging') {
-    _.merge(config, require('./config/staging'));
+if (process.env.OC_ENV === "staging") {
+    _.merge(config, require("./config/staging"));
 }
 
 // local config overrides everything when present.
 try {
-    const localConfig = require('./config/local');
+    const localConfig = require("./config/local");
     _.merge(config, localConfig);
 } catch {
     // Local file is not mandatory.
@@ -23,7 +23,7 @@ config.connection.port = process.env.PORT || config.connection.port;
 config.connection.host = process.env.HOST || config.connection.host;
 
 if (config.ghToken === null) {
-    throw new Error('GH token is not defined. Set it in the config file or using env var GH_TOKEN');
+    throw new Error("GH token is not defined. Set it in the config file or using env var GH_TOKEN");
 }
 
 module.exports = config;
