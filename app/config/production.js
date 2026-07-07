@@ -3,9 +3,9 @@
  */
 module.exports = {
     connection: {
-        port: 3000
+        port: 3000,
     },
     environment: 'production',
     ghUser: 'open-contracting-partnership',
-    ghRepo: 'ocp-data'
+    ghRepo: 'ocp-data',
 };

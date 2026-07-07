@@ -1,0 +1,26 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "formatter": {
+        "enabled": true,
+        "useEditorconfig": true,
+        "lineWidth": 119
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single"
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "suspicious": {
+                "noRedundantUseStrict": "off"
+            }
+        }
+    }
+}

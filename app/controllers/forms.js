@@ -7,37 +7,39 @@ var _ = require('lodash');
 
 module.exports = {
     list: {
-        handler: async (request, h) => {
+        handler: async () => {
             try {
-                let data = await github.getContent('forms');
-                let forms = data.map((o) => { return { name: o.name.replace('.json', '') }; });
+                const data = await github.getContent('forms');
+                const forms = data.map((o) => {
+                    return { name: o.name.replace('.json', '') };
+                });
                 return {
-                    forms
+                    forms,
                 };
             } catch (err) {
                 console.log('err', err);
                 throw Boom.notFound();
             }
-        }
+        },
     },
 
     single: {
-        handler: (request, h) => {
+        handler: (request) => {
             return {
                 form: request.params.formId,
                 message: 'This is not the page you are looking for...',
-                entries_url: `${config.connection.host}:${config.connection.port}/forms/${request.params.formId}/entries`
+                entries_url: `${config.connection.host}:${config.connection.port}/forms/${request.params.formId}/entries`,
             };
-        }
+        },
     },
 
     entries: {
-        handler: async (request, h) => {
+        handler: async (request) => {
             let data;
             try {
                 data = await Promise.all([
                     github.getContent(`data/${request.params.formId}`),
-                    formsService.getEntriesIndex(request.params.formId)
+                    formsService.getEntriesIndex(request.params.formId),
                 ]);
             } catch (err) {
                 console.log('err', err);
@@ -48,17 +50,17 @@ module.exports = {
             let _index;
             if (data[1] !== null) {
                 try {
-                    _index = JSON.parse((Buffer.from(data[1].content, 'base64')).toString());
+                    _index = JSON.parse(Buffer.from(data[1].content, 'base64').toString());
                 } catch (e) {
-                    throw Boom.badImplementation('Resources were not valid JSON. ' + e.message);
+                    throw Boom.badImplementation(`Resources were not valid JSON. ${e.message}`);
                 }
             }
 
             // Remove _index if it exists.
             entriesList = _.reject(entriesList, ['name', '_index.json']);
 
-            let entries = entriesList.map((o) => {
-                let _indexData = _.get(_index, o.name, {});
+            const entries = entriesList.map((o) => {
+                const _indexData = _.get(_index, o.name, {});
                 _indexData.id = o.name.replace('.json', '');
                 if (!_indexData.name) {
                     _indexData.name = _indexData.id;
@@ -68,37 +70,37 @@ module.exports = {
 
             return {
                 form: request.params.formId,
-                entries
+                entries,
             };
-        }
+        },
     },
 
     entriesSingle: {
-        handler: async (request, h) => {
+        handler: async (request) => {
             let data;
             try {
                 data = await Promise.all([
                     github.getMasterSHA(),
                     github.getContent(`forms/${request.params.formId}.json`),
-                    github.getContent(`data/${request.params.formId}/${request.params.entryId}.json`)
+                    github.getContent(`data/${request.params.formId}/${request.params.entryId}.json`),
                 ]);
             } catch (err) {
                 console.log('err', err);
                 throw Boom.notFound();
             }
 
-            let sha = data[0];
-            let form = data[1];
-            let entry = data[2];
+            const sha = data[0];
+            const form = data[1];
+            const entry = data[2];
 
-            let formContent = (Buffer.from(form.content, 'base64')).toString();
-            let entryContent = (Buffer.from(entry.content, 'base64')).toString();
+            let formContent = Buffer.from(form.content, 'base64').toString();
+            let entryContent = Buffer.from(entry.content, 'base64').toString();
 
             try {
                 formContent = JSON.parse(formContent);
                 entryContent = JSON.parse(entryContent);
             } catch (e) {
-                throw Boom.badImplementation('Resources were not valid JSON. ' + e.message);
+                throw Boom.badImplementation(`Resources were not valid JSON. ${e.message}`);
             }
 
             return {
@@ -108,21 +110,21 @@ module.exports = {
                 meta: {
                     masterSHA: sha,
                     entrySHA: entry.sha,
-                    formSchemaVersion: formContent.version
+                    formSchemaVersion: formContent.version,
                 },
                 schema: formContent,
-                data: entryContent.results
+                data: entryContent.results,
             };
-        }
+        },
     },
 
     entriesSingleUpdate: {
-        handler: async (request, h) => {
-            let branch = `${request.payload.form}-${request.payload.entry}-update-${Date.now()}`;
+        handler: async (request) => {
+            const branch = `${request.payload.form}-${request.payload.entry}-update-${Date.now()}`;
 
-            let author = {
+            const author = {
                 name: _.get(request.payload.author, 'name', 'Anonymous'),
-                email: _.get(request.payload.author, 'email', 'anonymous@example.com')
+                email: _.get(request.payload.author, 'email', 'anonymous@example.com'),
             };
 
             if (_.trim(author.name) === '') {
@@ -134,12 +136,12 @@ module.exports = {
             }
 
             try {
-                let data = await Promise.all([
+                const data = await Promise.all([
                     github.getContent(`data/${request.params.formId}/${request.params.entryId}.json`),
-                    github.createBranch(branch, request.payload.meta.masterSHA)
+                    github.createBranch(branch, request.payload.meta.masterSHA),
                 ]);
 
-                var entryContent = JSON.parse((Buffer.from(data[0].content, 'base64')).toString());
+                const entryContent = JSON.parse(Buffer.from(data[0].content, 'base64').toString());
 
                 entryContent.results = request.payload.data;
                 entryContent.meta.date = Date.now();
@@ -151,19 +153,19 @@ module.exports = {
                     branch,
                     'Data update',
                     author.name,
-                    author.email
+                    author.email,
                 );
 
                 await github.createPR(`Data update from ${author.name}`, branch);
 
                 return {
                     statusCode: 200,
-                    message: 'Pull request successfully created.'
+                    message: 'Pull request successfully created.',
                 };
             } catch (err) {
                 console.log('err', err);
                 throw Boom.badImplementation();
             }
-        }
-    }
+        },
+    },
 };

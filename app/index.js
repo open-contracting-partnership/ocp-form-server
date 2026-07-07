@@ -6,12 +6,14 @@ var server = Hapi.server({
     host: config.connection.host,
     port: config.connection.port,
     routes: {
-        cors: true
+        cors: true,
     },
-    debug: config.debug ? {
-        log: ['error'],
-        request: ['error', 'received', 'response']
-    } : false
+    debug: config.debug
+        ? {
+              log: ['error'],
+              request: ['error', 'received', 'response'],
+          }
+        : false,
 });
 
 process.on('unhandledRejection', (err) => {
@@ -20,7 +22,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 // Bootstrap Hapi Server Plugins, passes the server object to the plugins.
-var init = async function () {
+var init = async () => {
     await require('./services/plugins')(server);
 
     // Add the server routes.
@@ -35,7 +37,7 @@ var init = async function () {
         // Start the server.
         await server.start();
         // Log to the console the host and port info.
-        console.log('Server started at: ' + server.info.uri);
+        console.log(`Server started at: ${server.info.uri}`);
     }
 };
 

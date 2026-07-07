@@ -1,6 +1,5 @@
 'use strict';
-module.exports = function (server) {
-    return server.register([
+module.exports = (server) =>
+    server.register([
         // Plugin registration done.
     ]);
-};

@@ -10,9 +10,9 @@ if (process.env.OC_ENV === 'staging') {
 
 // local config overrides everything when present.
 try {
-    var localConfig = require('./config/local');
+    const localConfig = require('./config/local');
     _.merge(config, localConfig);
-} catch (e) {
+} catch {
     // Local file is not mandatory.
 }
 
